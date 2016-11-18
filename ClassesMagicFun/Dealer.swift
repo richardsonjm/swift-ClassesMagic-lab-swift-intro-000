@@ -36,8 +36,8 @@ class Dealer {
         }
     }
     
-    func turn(_ player: Player) {
-        while (!player.isBlackjack && player.willHit(currentBet)) {
+    func turn(player: Player) {
+        while (!player.isBlackjack && player.willHit(currentBet) && deck.nextCard < 52) {
             player.hand.append(deck.drawCard()!)
         }
     }
@@ -49,6 +49,15 @@ class Dealer {
         } else if (winner?.name == "House"){
             house.win(currentBet)
             player.lose(currentBet)
+        }
+    }
+    
+    func placeBet(bet: UInt) -> Bool {
+        if player.canPlaceBet(bet) && house.canPlaceBet(bet) {
+            currentBet = bet
+            return true
+        } else {
+            return false
         }
     }
 }
