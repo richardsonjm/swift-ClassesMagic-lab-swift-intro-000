@@ -38,23 +38,23 @@ class Player {
         self.hand = []
     }
     
-    func dealCard(_ card: Card) {
+    func dealCard(card: Card) {
         hand.append(card)
     }
     
-    func canPlaceBet(_ bet: UInt) -> Bool {
+    func canPlaceBet(bet: UInt) -> Bool {
         return bet < wallet
     }
     
-    func willHit(_ bet: UInt) -> Bool {
+    func willHit(bet: UInt) -> Bool {
         return canPlaceBet(bet) && !isBusted
     }
     
-    func win(_ amount: UInt) {
+    func win(amount: UInt) {
         wallet = wallet + amount
     }
     
-    func lose(_ amount: UInt) {
+    func lose(amount: UInt) {
         wallet = wallet - amount
     }
 }

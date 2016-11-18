@@ -10,9 +10,11 @@ import Foundation
 
 class Deck {
     var cards: [Card]
+    var nextCard: Int
     
     init() {
         self.cards = []
+        self.nextCard = 0
         buildDeck()
     }
     
@@ -21,7 +23,8 @@ class Deck {
     }
     
     func drawCard() -> Card? {
-        if(cards.count > 0) {
+        if(nextCard < 52) {
+            nextCard += 1
             return cards.removeFirst()
         } else {
             return nil
