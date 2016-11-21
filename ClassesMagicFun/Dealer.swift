@@ -9,30 +9,54 @@
 import Foundation
 
 class Dealer {
-    var deck: Deck
-    var player: Player
-    var house: House
-    var winner: Player?
+    let deck: Deck
+    let player: Player
+    let house: House
     var currentBet: UInt
+    var playerTurns: UInt
+    var winningPlayer: Player?
+    var winner: Player? {
+        if let _ = winningPlayer {
+            return winningPlayer
+        }
+        
+        if playerTurns < 2 {
+            return nil
+        }
+        
+        if player.isBusted {
+            return house
+        }
+        
+        if house.isBusted {
+            return player
+        }
+        
+        if player.handValue > house.handValue {
+            return player
+        } else {
+            return house
+        }
+    }
     
     init() {
         self.deck = Deck()
         self.player = Player(name: "Player")
         self.house = House()
         self.currentBet = 0
+        self.playerTurns = 0
     }
     
     
     func deal() {
-        winner = nil
         player.hand.append(deck.drawCard()!)
         house.hand.append(deck.drawCard()!)
         player.hand.append(deck.drawCard()!)
         house.hand.append(deck.drawCard()!)
         if player.isBlackjack {
-            winner = player
+            winningPlayer = player
         } else if house.isBlackjack {
-            winner = house
+            winningPlayer = house
         }
     }
     
@@ -40,14 +64,17 @@ class Dealer {
         while (!player.isBlackjack && player.willHit(currentBet) && deck.nextCard < 52) {
             player.hand.append(deck.drawCard()!)
         }
+        playerTurns += 1
     }
     
     func award() {
-        if (winner?.name == "Player") {
-            player.win(currentBet)
+        guard winner != nil else {
+            return
+        }
+        winner!.win(currentBet)
+        if (winner!.name == "Player") {
             house.lose(currentBet)
-        } else if (winner?.name == "House"){
-            house.win(currentBet)
+        } else {
             player.lose(currentBet)
         }
     }
@@ -61,12 +88,3 @@ class Dealer {
         }
     }
 }
-
-//Create a deck property of type Deck to store the deck used to play the game.
-//Create a player property of type Player to store the person who is playing the game.
-//Create a house property of type House to store the house participating in the game.
-//Create a winner property of type Player?. It should return the winner of the game if the game is over, or nil if the game is still in progress.
-//Create an initializer that takes no parameters. It should create a new deck, a new player named "Player", and a House.
-//Implement the method deal(). This will be the first deal of the game. The player should be dealt two cards, and the house should get two cards. If either player has blackjack (21), the winner property should be set to the winner of the game.
-//Implement a turn(_:) method. This should take a single parameter, player, which is the Player whose turn should be taken. The player should be dealt cards until they decide to stay (take no more cards).
-//Implement a method award(_:). This method should give the winner the current bet, and deduct the current from the losing player.

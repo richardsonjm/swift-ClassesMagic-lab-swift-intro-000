@@ -19,16 +19,15 @@ class Deck {
     }
     
     func shuffle() {
+        nextCard = 0
         cards.shuffleInPlace()
     }
     
     func drawCard() -> Card? {
-        if(nextCard < 52) {
-            nextCard += 1
-            return cards.removeFirst()
-        } else {
-            return nil
-        }
+        guard nextCard < cards.count else { return nil }
+        let card = cards[nextCard]
+        nextCard += 1
+        return card
     }
     
     func buildDeck() {
@@ -41,8 +40,3 @@ class Deck {
         shuffle()
     }
 }
-
-//
-//Add a property of type [Card] called cards. This stores all the cards in the deck.
-//Implement a shuffle() method that will shuffle the deck. (Note that a method called shuffleInPlace() has been implemented for you on Arrays. This method will shuffle the elements of a mutable array. You could, for example, call cards.shuffleInPlace() to shuffle the array of Cards.)
-//Implement a drawCard() method. This method should return a value of type Card?. If there are cards left in the deck, it should return the next card; otherwise, it should return nil.
